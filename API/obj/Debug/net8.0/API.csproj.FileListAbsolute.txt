@@ -135,3 +135,4 @@
 /Users/apple/Desktop/Projects/WebApp/API/obj/Debug/net8.0/API.pdb
 /Users/apple/Desktop/Projects/WebApp/API/obj/Debug/net8.0/API.genruntimeconfig.cache
 /Users/apple/Desktop/Projects/WebApp/API/obj/Debug/net8.0/ref/API.dll
+/Users/apple/Desktop/Projects/WebApp/API/obj/Debug/net8.0/API.sourcelink.json
