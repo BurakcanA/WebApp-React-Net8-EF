@@ -6,13 +6,17 @@ import {
   Th,
   Tbody,
   Td,
+  Text,
   Box,
   Flex,
   Heading,
   Button,
+  HStack,
+  Avatar,
+  Badge,
 } from "@chakra-ui/react";
 import "./App.css";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import { Base_URL } from "./constant";
 import { useEffect, useState } from "react";
@@ -25,9 +29,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true); 
-       axios.get(Base_URL + 'Product').then((response) => {
-        console.log(response.data);
-        
+       axios.get(Base_URL + 'Product').then((response) => {        
         setData(response.data) 
       }).catch((error) => {
         console.log(error) 
@@ -52,8 +54,8 @@ function App() {
               <Th>Id</Th>
               <Th>Name</Th>
               <Th>Description</Th>
-              <Th isNumeric >Price</Th>
               <Th>Is In Store</Th>
+              <Th isNumeric >Price</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -62,17 +64,37 @@ function App() {
               data.map((product:Product) => (
             <Tr key={product.id}>
               <Td>{product.id}</Td>
-              <Td>{product.name}</Td>
+              <Td>
+                <HStack>
+                  <Avatar name={product.name}></Avatar>
+                  <Text>{product.name}</Text>
+                </HStack>
+              </Td>
               <Td>{product.descrption}</Td>
+              <Td>
+                <Badge>
+                  {product.inStore ? 'Yes' : 'No'}
+                </Badge>
+              </Td>
               <Td isNumeric>{product.price}</Td>
-              <Td>{JSON.stringify(product.inStore)}</Td>
-              <Td></Td>
+              <Td>
+                <HStack gap={3}>                  
+                  <ViewIcon color={'blue'} boxSize={21} />
+                  <EditIcon boxSize={19} />
+                  <DeleteIcon color={'red'} boxSize={19} />
+                </HStack>
+              </Td>
             </Tr>
               )) 
              }
           </Tbody>
         </Table>
       </TableContainer>
+      {data.length == 0 && (
+        <Heading textAlign={'center'} p={5} fontSize={15}>
+          No Data
+        </Heading>
+      )}
     </Box>
   );
 }
