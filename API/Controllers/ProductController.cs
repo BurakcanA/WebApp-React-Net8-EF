@@ -1,5 +1,6 @@
 using API.Data;
 using API.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace API.Controllers
         }
         
         [HttpGet]
+        [EnableCors("AllowReactApp")] 
          public async Task<IActionResult> Products()
          {
             return Ok(await _dataContext.Products.ToListAsync());
