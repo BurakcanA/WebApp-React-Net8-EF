@@ -12,30 +12,77 @@ import {
   Text,
   VStack,
   Switch,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { Base_URL } from "../constant";
+import { Product } from "../types/product";
 
 type ProductFormProps = {
   isOpen: boolean;
   onClose: () => void;
+  fetchProduct: () => void;
+  currentData?: Product;
 };
 
-const ProductForm = ({ isOpen, onClose }: ProductFormProps) => {
+const ProductForm = ({
+  isOpen,
+  onClose,
+  fetchProduct,
+  currentData,
+}: ProductFormProps) => {
+  const toast = useToast();
   const [product, setProduct] = useState({
-    id: 0,
-    name: "",
-    descrption: "",
-    price: "",
-    inStore: false,
+    id: currentData?.id || 0,
+    name: currentData?.name || "",
+    descrption: currentData?.descrption || "",
+    price: currentData?.price || "",
+    inStore: currentData?.inStore || false,
   });
 
   const onSave = () => {
+    if (!currentData?.id)
+    {
+        AddProduct();
+    }else 
+    {
+        EditProduct();
+    }
+  };
+
+  const AddProduct = () => {
     axios
-      .post(Base_URL + "product", product)
+      .post(Base_URL, product)
       .then(() => {
         onClose();
+        fetchProduct();
+
+        toast({
+          title: "Product Added",
+          description: "Product Added succesfully",
+          isClosable: true,
+          duration: 3000,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const EditProduct = () => {
+    axios
+      .put(Base_URL + currentData?.id, product)
+      .then(() => {
+        onClose();
+        fetchProduct();
+
+        toast({
+          title: 'Product Updated',
+          description: 'Product Updated Succesfully',
+          isClosable: true,
+          duration:3000
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -44,10 +91,10 @@ const ProductForm = ({ isOpen, onClose }: ProductFormProps) => {
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose }>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader shadow={"sm"}>Add Product</ModalHeader>
+          <ModalHeader shadow={"sm"}>{currentData?.id ? "Update Product" : "Add Product"}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack gap={4}>
